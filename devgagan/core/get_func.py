@@ -583,7 +583,7 @@ async def handle_user_input(event):
             await event.respond(f"Custom caption set to: {custom_caption}")
 
         elif session_type == 'setreplacement':
-            match = rematch(r"'(.+)' '(.+)'", event.text)
+            match = re.match(r"'(.+)' '(.+)'", event.text)
             if not match:
                 await event.respond("Usage: 'WORD(s)' 'REPLACEWORD'")
             else:
