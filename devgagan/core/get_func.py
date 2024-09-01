@@ -121,13 +121,12 @@ async def get_msg(userbot, sender, edit_id, msg_link, i, message):
 
             
 
-            
             if msg.media == MessageMediaType.VIDEO and msg.video.mime_type in ["video/mp4", "video/x-matroska"]:
 
-                metadata = video_metadata(file)
-                width = metadata['width']
-                height = metadata['height']
-                duration = metadata['duration']
+                metadata = video_metadata(file)      
+                width= metadata['width']
+                height= metadata['height']
+                duration= metadata['duration']
 
                 if duration <= 300:
                     devggn = await app.send_video(chat_id=sender, video=file, caption=caption, height=height, width=width, duration=duration, thumb=None, progress=progress_bar, progress_args=('**UPLOADING:**\n', edit, time.time())) 
@@ -139,50 +138,45 @@ async def get_msg(userbot, sender, edit_id, msg_link, i, message):
                     await devggn.copy(LOG_GROUP)
                     await edit.delete()
                     return
-    
-            delete_words = load_delete_words(sender)
-            custom_caption = get_user_caption_preference(sender)
-            original_caption = msg.caption if msg.caption else ''
-            final_caption = f"{original_caption}" if custom_caption else f"{original_caption}"
-    
-            lines = final_caption.split('\n')
-            processed_lines = []
-            for line in lines:
-                for word in delete_words:
-                    line = line.replace(word, '')
-           # Preserve the line whether it's empty or not, to maintain format
-            processed_lines.append(line)
+                
+                delete_words = load_delete_words(sender)
+                custom_caption = get_user_caption_preference(sender)
+                original_caption = msg.caption if msg.caption else ''
+                final_caption = f"{original_caption}" if custom_caption else f"{original_caption}"
+                lines = final_caption.split('\n')
+                processed_lines = []
+                for line in lines:
+                    for word in delete_words:
+                        line = line.replace(word, '')
+                    if line.strip():
+                        processed_lines.append(line.rstrip())
+                final_caption = '\n'.join(processed_lines)
+                replacements = load_replacement_words(sender)
+                for word, replace_word in replacements.items():
+                    final_caption = final_caption.replace(word, replace_word)
+                caption = f"{final_caption}\n\n__**{custom_caption}**__" if custom_caption else f"{final_caption}"
 
-            final_caption = '\n'.join(processed_lines)
-
-    # Apply replacement words
-           replacements = load_replacement_words(sender)
-           for word, replace_word in replacements.items():
-               final_caption = final_caption.replace(word, replace_word)
-
-    # Make the final caption bold
-           caption = f"**{final_caption}**\n\n__**{custom_caption}**__" if custom_caption else f"**{final_caption}**"
-
-           target_chat_id = user_chat_ids.get(chatx, chatx)
-
-           thumb_path = await screenshot(file, duration, chatx)
-           try:
-               devggn = await app.send_video(
-                   chat_id=target_chat_id,
-                   video=file,
-                   caption=caption,
-                   supports_streaming=True,
-                   height=height,
-                   width=width,
-                   duration=duration,
-                   thumb=thumb_path,
-                   progress=progress_bar,
-                   progress_args=(
-                   '**__Uploading...__**\n',
-                   edit,
-                   time.time()
-                   )
-                  )
+                target_chat_id = user_chat_ids.get(chatx, chatx)
+                
+                thumb_path = await screenshot(file, duration, chatx)              
+                try:
+                    devggn = await app.send_video(
+                        chat_id=target_chat_id,
+                        video=file,
+                        caption=caption,
+                        supports_streaming=True,
+                        height=height,
+                        width=width,
+                        duration=duration,
+                        thumb=thumb_path,
+                        progress=progress_bar,
+                        progress_args=(
+                        '**__Uploading...__**\n',
+                        edit,
+                        time.time()
+                        )
+                    )  
+            
                     if msg.pinned_message:
                         try:
                             await devggn.pin(both_sides=True)
