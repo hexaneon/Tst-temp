@@ -149,7 +149,7 @@ async def get_msg(userbot, sender, edit_id, msg_link, i, message):
             processed_lines = []
             for line in lines:
                 for word in delete_words:
-                line = line.replace(word, '')
+                    line = line.replace(word, '')
            # Preserve the line whether it's empty or not, to maintain format
             processed_lines.append(line)
 
