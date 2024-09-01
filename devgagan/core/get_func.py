@@ -148,8 +148,7 @@ async def get_msg(userbot, sender, edit_id, msg_link, i, message):
                 for line in lines:
                     for word in delete_words:
                         line = line.replace(word, '')
-                    if line.strip():
-                        processed_lines.append(line.rstrip())
+                        processed_lines.append(line)
                 final_caption = '\n'.join(processed_lines)
                 replacements = load_replacement_words(sender)
                 for word, replace_word in replacements.items():
