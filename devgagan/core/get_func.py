@@ -199,13 +199,12 @@ async def get_msg(userbot, sender, edit_id, msg_link, i, message):
                 for line in lines:
                     for word in delete_words:
                         line = line.replace(word, '')
-                    if line.strip():
-                        processed_lines.append(line.strip())
+                    processed_lines.append(line)
                 final_caption = '\n'.join(processed_lines)
                 replacements = load_replacement_words(sender)
                 for word, replace_word in replacements.items():
                     final_caption = final_caption.replace(word, replace_word)
-                caption = f"{final_caption}\n\n__**{custom_caption}**__" if custom_caption else f"{final_caption}"
+                caption = f"**{final_caption}**\n\n__**{custom_caption}**__" if custom_caption else f"**{final_caption}**"
 
                 target_chat_id = user_chat_ids.get(sender, sender)
                 devggn = await app.send_photo(chat_id=target_chat_id, photo=file, caption=caption)
@@ -226,13 +225,12 @@ async def get_msg(userbot, sender, edit_id, msg_link, i, message):
                 for line in lines:
                     for word in delete_words:
                         line = line.replace(word, '')
-                    if line.strip():
-                        processed_lines.append(line.strip())
+                    processed_lines.append(line)
                 final_caption = '\n'.join(processed_lines)
                 replacements = load_replacement_words(chatx)
                 for word, replace_word in replacements.items():
                     final_caption = final_caption.replace(word, replace_word)
-                caption = f"{final_caption}\n\n__**{custom_caption}**__" if custom_caption else f"{final_caption}"
+                caption = f"**{final_caption}**\n\n__**{custom_caption}**__" if custom_caption else f"**{final_caption}**"
 
                 target_chat_id = user_chat_ids.get(chatx, chatx)
                 try:
@@ -299,7 +297,7 @@ async def copy_message_with_chat_id(client, sender, chat_id, message_id):
         for word, replace_word in replacements.items():
             final_caption = final_caption.replace(word, replace_word)
         
-        caption = f"{final_caption}\n\n__**{custom_caption}**__" if custom_caption else f"{final_caption}"
+        caption = f"**{final_caption}**\n\n__**{custom_caption}**__" if custom_caption else f"**{final_caption}**"
         
         if msg.media:
             if msg.media == MessageMediaType.VIDEO:
